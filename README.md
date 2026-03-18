@@ -124,28 +124,18 @@ npx lifelog clean --force
 
 ## Development
 
-### Compile and run
+### Build
 
 ```bash
-# development
-yarn run start
-
-# watch mode
-yarn run start:dev
-
-# production mode
-yarn run start:prod
+yarn build
 ```
 
 ### Run tests
 
 ```bash
 # unit tests
-yarn run test
-
-# e2e tests
-yarn run test:e2e
+yarn test
 
 # test coverage
-yarn run test:cov
+yarn test:cov
 ```
