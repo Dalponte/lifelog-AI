@@ -2,6 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import { SetupCommand } from '../commands/setup.command';
 import { ISystemSetup } from '../interfaces/system-setup.interface';
+import { DatabaseService } from '../../shared/database/database.service';
 import * as readline from 'readline';
 
 @CommandHandler(SetupCommand)
@@ -11,6 +12,7 @@ export class SetupHandler implements ICommandHandler<SetupCommand> {
   constructor(
     @Inject(ISystemSetup)
     private readonly systemSetup: ISystemSetup,
+    private readonly databaseService: DatabaseService,
   ) {}
 
   async execute(_command: SetupCommand): Promise<void> {
@@ -42,6 +44,14 @@ export class SetupHandler implements ICommandHandler<SetupCommand> {
       console.log(`✅ Created lifelog directory: ${dirResult.path}`);
     } else {
       console.log(`✅ Lifelog directory already exists: ${dirResult.path}`);
+    }
+
+    // --- Step 3: Database setup ---
+    try {
+      this.databaseService.initDb();
+      console.log('✅ SQLite database initialized.');
+    } catch (error) {
+      console.log(`⚠️  Could not initialize database: ${error.message}`);
     }
 
     console.log('\n🎉 Setup complete! You can now run: lifelog start -s <session>');

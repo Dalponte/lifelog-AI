@@ -1,0 +1,28 @@
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Logger } from '@nestjs/common';
+import { ListProcessedCommand } from '../commands/list-processed.command';
+import { DatabaseService } from '../../shared/database/database.service';
+
+@CommandHandler(ListProcessedCommand)
+export class ListProcessedHandler implements ICommandHandler<ListProcessedCommand> {
+  private readonly logger = new Logger(ListProcessedHandler.name);
+
+  constructor(private readonly databaseService: DatabaseService) {}
+
+  async execute(command: ListProcessedCommand): Promise<void> {
+    this.logger.log('Fetching processed audio files from the database...\n');
+    
+    try {
+      const audios = this.databaseService.getProcessedAudios();
+      
+      if (audios.length === 0) {
+        console.log('No processed audio files found in the database.');
+        return;
+      }
+      
+      console.table(audios);
+    } catch (error) {
+      this.logger.error(`Error fetching processed files: ${error.message}`);
+    }
+  }
+}

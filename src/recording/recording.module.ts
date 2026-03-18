@@ -9,9 +9,13 @@ import { CleanCommandRunner } from './cli/clean.command.runner';
 import { IAudioRecorder } from './interfaces';
 import { ISystemSetup } from './interfaces';
 import { IFileCleaner } from './interfaces';
+import { FileCleanerService } from './infrastructure/file-cleaner.service';
+import { ProcessHandler } from './handlers/process.handler';
+import { ProcessCommandRunner } from './cli/process.command.runner';
+import { ListProcessedHandler } from './handlers/list-processed.handler';
+import { ListProcessedCommandRunner } from './cli/list-processed.command.runner';
 import { SoxRecorderService } from './infrastructure/sox-recorder.service';
 import { LinuxSystemSetupService } from './infrastructure/linux-system-setup.service';
-import { FileCleanerService } from './infrastructure/file-cleaner.service';
 
 @Module({
   imports: [CqrsModule],
@@ -20,11 +24,15 @@ import { FileCleanerService } from './infrastructure/file-cleaner.service';
     StartRecordingHandler,
     SetupHandler,
     CleanHandler,
+    ProcessHandler,
+    ListProcessedHandler,
 
     // CLI Command Runners
     StartRecordingCommandRunner,
     SetupCommandRunner,
     CleanCommandRunner,
+    ProcessCommandRunner,
+    ListProcessedCommandRunner,
 
     // Infrastructure adapters (ports → adapters)
     {
