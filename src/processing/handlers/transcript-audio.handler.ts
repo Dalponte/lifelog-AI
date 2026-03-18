@@ -43,7 +43,7 @@ export class TranscriptAudioHandler implements ICommandHandler<TranscriptAudioCo
       
       // Trigger the next command in the pipeline
       await this.commandBus.execute(
-        new CategorizeTranscriptionCommand(transcriptText, command.fileName),
+        new CategorizeTranscriptionCommand(command.fileName),
       );
 
     } catch (error) {
