@@ -13,14 +13,14 @@ export class ListProcessedHandler implements ICommandHandler<ListProcessedComman
     this.logger.log('Fetching processed audio files from the database...\n');
     
     try {
-      const audios = this.databaseService.getProcessedAudios();
+      const transcriptions = this.databaseService.getTranscriptions();
       
-      if (audios.length === 0) {
+      if (transcriptions.length === 0) {
         console.log('No processed audio files found in the database.');
         return;
       }
       
-      console.table(audios);
+      console.table(transcriptions);
     } catch (error) {
       this.logger.error(`Error fetching processed files: ${error.message}`);
     }

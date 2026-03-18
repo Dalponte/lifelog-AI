@@ -9,6 +9,8 @@ export interface SetupResult {
 export interface ISystemSetup {
   isSoxInstalled(): Promise<boolean>;
   installSox(): Promise<void>;
+  isWhisperInstalled(): Promise<boolean>;
+  installWhisper(): Promise<void>;
   ensureLifelogDir(): Promise<{ created: boolean; path: string }>;
 }
 

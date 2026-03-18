@@ -7,10 +7,11 @@ import { join } from 'path';
 const LIFELOG_DIR = '.lifelog';
 const DB_NAME = 'lifelog.db';
 
-export interface AudioMetadata {
+export interface TranscriptionMetadata {
   filename: string;
   session: string;
   datetime: string;
+  transcript?: string;
 }
 
 @Injectable()
@@ -34,32 +35,44 @@ export class DatabaseService {
   public initDb(): void {
     this.logger.log('Initializing SQLite database...');
     const stmt = this.db.prepare(`
-      CREATE TABLE IF NOT EXISTS audios (
+      CREATE TABLE IF NOT EXISTS transcriptions (
         filename TEXT PRIMARY KEY,
         session TEXT,
-        datetime TEXT
+        datetime TEXT,
+        transcript TEXT
       )
     `);
     stmt.run();
-    this.logger.log('Database audios table is ready.');
+    this.logger.log('Database transcriptions table is ready.');
   }
 
-  public isAudioProcessed(filename: string): boolean {
-    const stmt = this.db.prepare('SELECT filename FROM audios WHERE filename = ?');
+  public isProcessed(filename: string): boolean {
+    const stmt = this.db.prepare('SELECT filename FROM transcriptions WHERE filename = ?');
     const result = stmt.get(filename);
     return !!result;
   }
 
-  public insertAudio(metadata: AudioMetadata): void {
+  public insertTranscription(metadata: TranscriptionMetadata): void {
     const stmt = this.db.prepare(`
-      INSERT INTO audios (filename, session, datetime)
+      INSERT INTO transcriptions (filename, session, datetime)
       VALUES (@filename, @session, @datetime)
     `);
     stmt.run(metadata);
   }
 
-  public getProcessedAudios(): AudioMetadata[] {
-    const stmt = this.db.prepare('SELECT * FROM audios ORDER BY datetime DESC');
-    return stmt.all() as AudioMetadata[];
+  public updateTranscript(filename: string, transcript: string): void {
+    const stmt = this.db.prepare('UPDATE transcriptions SET transcript = ? WHERE filename = ?');
+    stmt.run(transcript, filename);
+  }
+
+  public getTranscriptions(): TranscriptionMetadata[] {
+    const stmt = this.db.prepare('SELECT * FROM transcriptions ORDER BY datetime DESC');
+    const results = stmt.all() as TranscriptionMetadata[];
+    return results.map(row => ({
+      ...row,
+      transcript: row.transcript && row.transcript.length > 100 
+        ? row.transcript.substring(0, 100) + '...' 
+        : row.transcript
+    }));
   }
 }

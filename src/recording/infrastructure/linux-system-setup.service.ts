@@ -35,6 +35,42 @@ export class LinuxSystemSetupService implements ISystemSetup {
     this.logger.log('SoX installed successfully.');
   }
 
+  async isWhisperInstalled(): Promise<boolean> {
+    try {
+      execSync('which whisper', { stdio: 'ignore' });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async installWhisper(): Promise<void> {
+    this.logger.log('Installing Whisper CLI prerequisites and pipx...');
+    this.logger.log('Running: sudo apt install -y ffmpeg python3 pipx');
+
+    const aptResult = spawnSync('sudo', ['apt', 'install', '-y', 'ffmpeg', 'python3', 'pipx'], {
+      stdio: 'inherit',
+    });
+
+    if (aptResult.status !== 0) {
+      throw new Error(`Apt installation failed with exit code ${aptResult.status}`);
+    }
+
+    this.logger.log('Ensuring pipx path...');
+    spawnSync('pipx', ['ensurepath'], { stdio: 'inherit' });
+
+    this.logger.log('Installing openai-whisper via pipx...');
+    const pipxResult = spawnSync('pipx', ['install', 'openai-whisper'], {
+      stdio: 'inherit',
+    });
+
+    if (pipxResult.status !== 0) {
+      throw new Error(`Whisper installation failed with exit code ${pipxResult.status}`);
+    }
+
+    this.logger.log('Whisper installed successfully.');
+  }
+
   async ensureLifelogDir(): Promise<{ created: boolean; path: string }> {
     const lifelogPath = join(homedir(), LIFELOG_DIR);
 

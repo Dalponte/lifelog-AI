@@ -35,7 +35,7 @@ export class ProcessHandler implements ICommandHandler<ProcessCommand> {
       let processedCount = 0;
       
       for (const fileName of wavFiles) {
-        if (this.databaseService.isAudioProcessed(fileName)) {
+        if (this.databaseService.isProcessed(fileName)) {
           this.logger.debug(`Skipping already processed file: ${fileName}`);
           continue;
         }
@@ -61,7 +61,7 @@ export class ProcessHandler implements ICommandHandler<ProcessCommand> {
           session = parts.slice(3, parts.length - 1).join('_');
         }
 
-        this.databaseService.insertAudio({
+        this.databaseService.insertTranscription({
           filename: fileName,
           session,
           datetime,

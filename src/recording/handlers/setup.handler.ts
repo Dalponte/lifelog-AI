@@ -37,6 +37,25 @@ export class SetupHandler implements ICommandHandler<SetupCommand> {
       }
     }
 
+    // --- Step 1.5: Whisper ---
+    const whisperInstalled = await this.systemSetup.isWhisperInstalled();
+
+    if (whisperInstalled) {
+      console.log('✅ Whisper (openai-whisper) is already installed.');
+    } else {
+      console.log('⚠️  Whisper CLI is not installed (or missing dependencies).');
+      const confirmWhisper = await this.askConfirmation(
+        '   Install openai-whisper via pipx? (sudo apt install ffmpeg python3 pipx && pipx install openai-whisper) [Y/n]: ',
+      );
+
+      if (confirmWhisper) {
+        await this.systemSetup.installWhisper();
+        console.log('✅ Whisper installed successfully.');
+      } else {
+        console.log('⏭️  Skipped Whisper installation.');
+      }
+    }
+
     // --- Step 2: ~/.lifelog directory ---
     const dirResult = await this.systemSetup.ensureLifelogDir();
 

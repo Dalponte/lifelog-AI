@@ -9,7 +9,7 @@ export class SoxRecorderService implements IAudioRecorder {
   private recordProcess: ChildProcess | null = null;
 
   async start(options: RecordingOptions): Promise<void> {
-    const timestamp = format(new Date(), 'MM-dd_HHmm');
+    const timestamp = format(new Date(), 'yyyy-MM-dd_HHmmss');
     const sessionSuffix = options.sessionName ? `_${options.sessionName}` : '';
     const filename = `rec_${timestamp}${sessionSuffix}_%03d.wav`;
     const outputFile = `${options.outputPath}/${filename}`;
