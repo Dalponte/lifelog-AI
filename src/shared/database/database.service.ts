@@ -7,20 +7,10 @@ import { join } from 'path';
 const LIFELOG_DIR = '.lifelog';
 const DB_NAME = 'lifelog.db';
 
-export interface TranscriptionMetadata {
-  filename: string;
-  session: string;
-  datetime: string;
-  transcript?: string;
-  category?: string;
-  topics?: string;
-  summary?: string;
-  context?: string;
-  improvedText?: string;
-}
+import { IDatabaseRepository, TranscriptionMetadata } from './interfaces/database-repository.interface';
 
 @Injectable()
-export class DatabaseService {
+export class DatabaseService implements IDatabaseRepository {
   private readonly logger = new Logger(DatabaseService.name);
   private db: Database.Database;
 
@@ -82,7 +72,7 @@ export class DatabaseService {
     stmt.run(metadata);
   }
 
-  public updateTranscript(filename: string, transcript: string): void {
+  public updateTranscription(filename: string, transcript: string): void {
     const stmt = this.db.prepare('UPDATE transcriptions SET transcript = ? WHERE filename = ?');
     stmt.run(transcript, filename);
   }

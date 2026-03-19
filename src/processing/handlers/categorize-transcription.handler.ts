@@ -1,16 +1,16 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { CategorizeTranscriptionCommand } from '../commands/categorize-transcription.command';
-import { AiService } from '../../shared/ai/ai.service';
-import { DatabaseService } from '../../shared/database/database.service';
+import { IAiService } from '../../shared/ai/interfaces/ai-service.interface';
+import { IDatabaseRepository } from '../../shared/database/interfaces/database-repository.interface';
 
 @CommandHandler(CategorizeTranscriptionCommand)
 export class CategorizeTranscriptionHandler implements ICommandHandler<CategorizeTranscriptionCommand> {
   private readonly logger = new Logger(CategorizeTranscriptionHandler.name);
 
   constructor(
-    private readonly aiService: AiService,
-    private readonly databaseService: DatabaseService,
+    private readonly aiService: IAiService,
+    private readonly databaseService: IDatabaseRepository,
   ) {}
 
   async execute(command: CategorizeTranscriptionCommand): Promise<void> {

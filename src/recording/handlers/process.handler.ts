@@ -1,8 +1,8 @@
 import { CommandHandler, ICommandHandler, CommandBus } from '@nestjs/cqrs';
-import { Logger } from '@nestjs/common';
+import { Logger, Inject } from '@nestjs/common';
 import { ProcessCommand } from '../commands/process.command';
 import { TranscriptAudioCommand } from '../../processing/commands/transcript-audio.command';
-import { DatabaseService } from '../../shared/database/database.service';
+import { IDatabaseRepository } from '../../shared/database/interfaces/database-repository.interface';
 import { readdirSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
@@ -15,7 +15,7 @@ export class ProcessHandler implements ICommandHandler<ProcessCommand> {
 
   constructor(
     private readonly commandBus: CommandBus,
-    private readonly databaseService: DatabaseService,
+    private readonly databaseService: IDatabaseRepository,
   ) {}
 
   async execute(command: ProcessCommand): Promise<void> {

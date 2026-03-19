@@ -9,7 +9,9 @@ import { CleanCommandRunner } from './cli/clean.command.runner';
 import { IAudioRecorder } from './interfaces';
 import { ISystemSetup } from './interfaces';
 import { IFileCleaner } from './interfaces';
+import { IRecordingConfig } from './interfaces/recording-config.interface';
 import { FileCleanerService } from './infrastructure/file-cleaner.service';
+import { RecordingConfigService } from './infrastructure/recording-config.service';
 import { ProcessHandler } from './handlers/process.handler';
 import { ProcessCommandRunner } from './cli/process.command.runner';
 import { ListProcessedHandler } from './handlers/list-processed.handler';
@@ -46,6 +48,10 @@ import { LinuxSystemSetupService } from './infrastructure/linux-system-setup.ser
     {
       provide: IFileCleaner,
       useClass: FileCleanerService,
+    },
+    {
+      provide: IRecordingConfig,
+      useClass: RecordingConfigService,
     },
   ],
 })

@@ -3,16 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { GoogleGenAI } from '@google/genai';
 import { Type, Schema } from '@google/genai';
 
-export interface ProcessedTranscription {
-  category: string;
-  topics: string[];
-  summary: string;
-  context: string;
-  improvedText: string;
-}
+import { IAiService, ProcessedTranscription } from './interfaces/ai-service.interface';
 
 @Injectable()
-export class AiService implements OnModuleInit {
+export class AiService implements OnModuleInit, IAiService {
   private readonly logger = new Logger(AiService.name);
   private ai: GoogleGenAI;
 

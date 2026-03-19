@@ -2,7 +2,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Inject, Logger } from '@nestjs/common';
 import { SetupCommand } from '../commands/setup.command';
 import { ISystemSetup } from '../interfaces/system-setup.interface';
-import { DatabaseService } from '../../shared/database/database.service';
+import { IDatabaseRepository } from '../../shared/database/interfaces/database-repository.interface';
 import * as readline from 'readline';
 
 @CommandHandler(SetupCommand)
@@ -10,9 +10,8 @@ export class SetupHandler implements ICommandHandler<SetupCommand> {
   private readonly logger = new Logger(SetupHandler.name);
 
   constructor(
-    @Inject(ISystemSetup)
     private readonly systemSetup: ISystemSetup,
-    private readonly databaseService: DatabaseService,
+    private readonly databaseService: IDatabaseRepository,
   ) {}
 
   async execute(_command: SetupCommand): Promise<void> {

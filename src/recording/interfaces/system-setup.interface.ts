@@ -6,12 +6,10 @@ export interface SetupResult {
   lifelogPath: string;
 }
 
-export interface ISystemSetup {
-  isSoxInstalled(): Promise<boolean>;
-  installSox(): Promise<void>;
-  isWhisperInstalled(): Promise<boolean>;
-  installWhisper(): Promise<void>;
-  ensureLifelogDir(): Promise<{ created: boolean; path: string }>;
+export abstract class ISystemSetup {
+  abstract isSoxInstalled(): Promise<boolean>;
+  abstract installSox(): Promise<void>;
+  abstract isWhisperInstalled(): Promise<boolean>;
+  abstract installWhisper(): Promise<void>;
+  abstract ensureLifelogDir(): Promise<{ created: boolean; path: string }>;
 }
-
-export const ISystemSetup = Symbol('ISystemSetup');
